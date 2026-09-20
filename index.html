@@ -1,4 +1,32 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>캡슝</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="캡슝">
+<meta property="og:title" content="캡슝 — 맥 메뉴바 캡쳐">
+<meta property="og:description" content="단축키 한 번으로 캡쳐·마킹·저장. macOS 메뉴바 캡쳐 도구.">
+<meta property="og:url" content="https://ky00nu.github.io/capture-app/">
+<meta property="og:image" content="https://ky00nu.github.io/capture-app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="캡슝 — 맥 메뉴바 캡쳐">
+<meta name="twitter:description" content="단축키 한 번으로 캡쳐·마킹·저장. macOS 메뉴바 캡쳐 도구.">
+<meta name="twitter:image" content="https://ky00nu.github.io/capture-app/og.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
+
 <style>
   :root {
     --bg: #F7F6F4;
@@ -13,7 +41,6 @@
     --cap-bg: #FFFFFF;
     --cap-line: #DAD5CF;
     --cap-shadow: rgba(26,22,20,0.14);
-    /* 메뉴바 목업: macOS 다크 글래스 — 두 테마 공통 */
     --mb-bg: rgba(28,30,34,0.82);
     --mb-ink: #F2F3F5;
     --mb-menu: rgba(44,46,52,0.96);
@@ -23,83 +50,64 @@
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #14110F;
-      --surface: #1D1917;
-      --surface-2: #251F1C;
-      --ink: #F0EBE6;
-      --muted: #A99F97;
-      --line: #2E2723;
-      --accent: #FF5A56;
-      --accent-soft: rgba(255,90,86,0.15);
-      --accent-ink: #FFFFFF;
-      --cap-bg: #251F1C;
-      --cap-line: #3A322D;
-      --cap-shadow: rgba(0,0,0,0.5);
+      --bg: #14110F; --surface: #1D1917; --surface-2: #251F1C;
+      --ink: #F0EBE6; --muted: #A99F97; --line: #2E2723;
+      --accent: #FF5A56; --accent-soft: rgba(255,90,86,0.15); --accent-ink: #FFFFFF;
+      --cap-bg: #251F1C; --cap-line: #3A322D; --cap-shadow: rgba(0,0,0,0.5);
     }
   }
   :root[data-theme="dark"] {
-    --bg: #14110F;
-    --surface: #1D1917;
-    --surface-2: #251F1C;
-    --ink: #F0EBE6;
-    --muted: #A99F97;
-    --line: #2E2723;
-    --accent: #FF5A56;
-    --accent-soft: rgba(255,90,86,0.15);
-    --accent-ink: #FFFFFF;
-    --cap-bg: #251F1C;
-    --cap-line: #3A322D;
-    --cap-shadow: rgba(0,0,0,0.5);
+    --bg: #14110F; --surface: #1D1917; --surface-2: #251F1C;
+    --ink: #F0EBE6; --muted: #A99F97; --line: #2E2723;
+    --accent: #FF5A56; --accent-soft: rgba(255,90,86,0.15); --accent-ink: #FFFFFF;
+    --cap-bg: #251F1C; --cap-line: #3A322D; --cap-shadow: rgba(0,0,0,0.5);
   }
 
   * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  img { max-width: 100%; }
   body {
-    background: var(--bg);
-    color: var(--ink);
+    background: var(--bg); color: var(--ink);
     font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 0; }
-  h1, h2, h3 {
-    font-family: "Gothic A1", "Noto Sans KR", sans-serif;
-    text-wrap: balance; letter-spacing: -0.01em; margin: 0;
-  }
+  h1, h2, h3 { font-family: "Gothic A1", "Noto Sans KR", sans-serif;
+               text-wrap: balance; letter-spacing: -0.01em; margin: 0; }
   .mono { font-family: "JetBrains Mono", ui-monospace, "SF Mono", monospace; }
 
-  /* ── 헤더 ── */
+  /* 헤더 */
   .top { display: flex; align-items: center; justify-content: space-between;
          padding-block: 20px; gap: 12px; }
-  .brand { display: flex; align-items: center; gap: 9px; }
-  .brand img { height: 26px; width: auto; display: block; }
-  .brand .name { font-family: "Gothic A1", sans-serif; font-weight: 800;
-                 font-size: 19px; color: var(--accent); }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .appicon { height: 28px; width: 28px; border-radius: 7px; display: block;
+                    box-shadow: 0 2px 6px -1px var(--cap-shadow); }
+  .brand .word { height: 22px; width: auto; display: block; }
   .chip { font-size: 12px; font-weight: 600; color: var(--muted);
           border: 1px solid var(--line); border-radius: 999px;
           padding: 4px 11px; background: var(--surface); }
 
-  /* ── 히어로 ── */
-  .hero { text-align: center; padding-block: 26px 44px; }
-  .hero .logo { height: clamp(88px, 17vw, 128px); width: auto; margin: 0 auto 26px;
-                display: block; filter: drop-shadow(0 12px 26px var(--accent-soft)); }
+  /* 히어로 */
+  .hero { text-align: center; padding-block: 20px 44px; }
+  .hero .heroicon { height: clamp(84px, 16vw, 116px); width: auto; margin: 0 auto 22px;
+                    display: block; border-radius: 24px;
+                    box-shadow: 0 18px 40px -18px var(--cap-shadow); }
   .hero h1 { font-size: clamp(28px, 5.6vw, 44px); font-weight: 800; line-height: 1.12; }
   .hero .lead { color: var(--muted); font-size: clamp(16px, 2.4vw, 19px);
                 max-width: 30em; margin: 16px auto 0; }
 
-  /* ── 메뉴바 목업 ── */
-  .stage {
-    margin: 34px auto 0; max-width: 460px; border-radius: 18px; overflow: hidden;
-    border: 1px solid var(--line);
-    background: radial-gradient(120% 90% at 30% 0%, var(--accent-soft), transparent 60%),
-                linear-gradient(180deg, var(--surface-2), var(--surface));
-    box-shadow: 0 24px 60px -30px var(--cap-shadow); padding: 0 0 30px;
-  }
+  /* 메뉴바 목업 */
+  .stage { margin: 34px auto 0; max-width: 460px; border-radius: 18px; overflow: hidden;
+           border: 1px solid var(--line);
+           background: radial-gradient(120% 90% at 30% 0%, var(--accent-soft), transparent 60%),
+                       linear-gradient(180deg, var(--surface-2), var(--surface));
+           box-shadow: 0 24px 60px -30px var(--cap-shadow); padding: 0 0 30px; }
   .menubar { height: 30px; background: var(--mb-bg); color: var(--mb-ink);
              display: flex; align-items: center; justify-content: flex-end;
              gap: 16px; padding: 0 14px; font-size: 13px; backdrop-filter: blur(8px); }
   .menubar .sys { opacity: 0.9; }
-  .menubar .cam { background: var(--mb-hi); color: #fff; border-radius: 6px;
-                  padding: 2px 7px; font-size: 14px; line-height: 1; }
+  .menubar .cam { display: flex; align-items: center; }
+  .menubar .cam img { height: 17px; width: auto; display: block; }
   .menu { width: 250px; margin: 8px 14px 0 auto; background: var(--mb-menu); color: var(--mb-ink);
           border: 1px solid var(--mb-line); border-radius: 10px; padding: 6px; font-size: 13.5px;
           box-shadow: 0 18px 40px -18px rgba(0,0,0,0.55); backdrop-filter: blur(14px); }
@@ -111,7 +119,7 @@
   .menu .sep { height: 1px; background: var(--mb-line); margin: 6px 8px; }
   .menu .dim { color: var(--mb-dim); }
 
-  /* ── 다운로드 ── */
+  /* 다운로드 */
   .dl { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 34px; }
   .btn { display: inline-flex; align-items: center; gap: 10px;
          background: var(--accent); color: var(--accent-ink);
@@ -125,30 +133,27 @@
   .dl .meta { color: var(--muted); font-size: 13.5px; }
   .dl .meta a { color: var(--accent); }
 
-  /* ── 섹션 ── */
+  /* 섹션 */
   section { padding-block: 40px; border-top: 1px solid var(--line); }
   .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.09em;
              text-transform: uppercase; color: var(--accent); }
   section h2 { font-size: clamp(24px, 4vw, 30px); margin-top: 8px; font-weight: 800; }
 
-  /* ── 기능 그리드 ── */
+  /* 기능 */
   .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 24px; }
-  .feature { background: var(--surface); border: 1px solid var(--line);
-             border-radius: 16px; padding: 20px; }
+  .feature { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
   .feature .ic { font-size: 22px; }
   .feature h3 { font-size: 16.5px; margin-top: 10px; font-weight: 700;
                 display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .feature p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
   .tag-new { font-size: 10.5px; font-weight: 800; letter-spacing: .04em;
-             color: var(--accent); background: var(--accent-soft);
-             border-radius: 999px; padding: 2px 8px; }
+             color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 2px 8px; }
 
-  /* ── 설치 단계 ── */
+  /* 설치 */
   .steps { list-style: none; counter-reset: s; padding: 0; margin: 24px 0 0;
            display: flex; flex-direction: column; gap: 14px; }
-  .steps li { counter-increment: s; position: relative;
-              background: var(--surface); border: 1px solid var(--line);
-              border-radius: 16px; padding: 18px 18px 18px 62px; }
+  .steps li { counter-increment: s; position: relative; background: var(--surface);
+              border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px 18px 62px; }
   .steps li::before { content: counter(s); position: absolute; left: 16px; top: 16px;
                       width: 30px; height: 30px; border-radius: 10px;
                       background: var(--accent-soft); color: var(--accent);
@@ -156,54 +161,47 @@
                       display: grid; place-items: center; }
   .steps li b { font-weight: 700; }
   .steps li p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-  .kbd { font-family: "JetBrains Mono", monospace; font-size: 12.5px;
-         background: var(--cap-bg); border: 1px solid var(--cap-line);
-         border-radius: 6px; padding: 1px 6px; color: var(--ink); }
+  .kbd { font-family: "JetBrains Mono", monospace; font-size: 12.5px; background: var(--cap-bg);
+         border: 1px solid var(--cap-line); border-radius: 6px; padding: 1px 6px; color: var(--ink); }
   .term { margin-top: 10px; background: #0C0F15; color: #D6E2F0; border-radius: 10px;
           padding: 12px 14px; overflow-x: auto; font-family: "JetBrains Mono", monospace;
           font-size: 12.5px; border: 1px solid #242C38; }
 
-  /* ── 요구사항 ── */
+  /* 요구사항 */
   .req { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
-  .req .item { background: var(--surface); border: 1px solid var(--line);
-               border-radius: 14px; padding: 16px; }
+  .req .item { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
   .req .k { font-size: 12px; color: var(--muted); font-weight: 600; }
   .req .v { font-family: "Gothic A1", sans-serif; font-weight: 700; font-size: 16px; margin-top: 3px; }
 
-  .note { margin-top: 20px; font-size: 13.5px; color: var(--muted);
-          background: var(--accent-soft); border: 1px solid var(--line);
-          border-radius: 14px; padding: 14px 16px; }
+  .note { margin-top: 20px; font-size: 13.5px; color: var(--muted); background: var(--accent-soft);
+          border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
 
   footer { border-top: 1px solid var(--line); padding-block: 28px 44px;
            color: var(--muted); font-size: 13px; text-align: center; }
-  footer img { height: 22px; width: auto; vertical-align: middle; margin-bottom: 8px; opacity: .9; }
-  footer .fname { display:block; margin-bottom: 6px; }
+  footer .word { height: 22px; width: auto; margin-bottom: 10px; opacity: .9; }
 
   @media (max-width: 560px) { .features, .req { grid-template-columns: 1fr; } }
   @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
 </style>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
-
+</head>
+<body>
 <div class="wrap">
   <div class="top">
     <div class="brand">
-      <img src="logo.webp" alt="캡슝 로고">
-      <span class="name">캡슝</span>
+      <img class="appicon" src="icon.png" alt="캡슝 아이콘">
+      <img class="word" src="logo.webp" alt="캡슝">
     </div>
     <span class="chip">arm64 · Apple Silicon</span>
   </div>
 
   <div class="hero">
-    <img class="logo" src="logo.webp" alt="캡슝">
+    <img class="heroicon" src="icon.png" alt="캡슝 앱 아이콘">
     <h1>맥 메뉴바에서<br>바로 캡쳐하고, 표시하고, 저장</h1>
     <p class="lead">단축키 한 번으로 부분·창·동영상 캡쳐. 캡쳐한 이미지에 바로 마킹하고, 원하는 폴더에 저장하고, 클립보드로 어디든 붙여넣으세요.</p>
 
     <div class="stage" role="img" aria-label="맥 메뉴바의 캡슝 아이콘과 드롭다운 메뉴">
       <div class="menubar">
-        <span class="cam">📸</span>
+        <span class="cam"><img src="icon-mark.png" alt="캡슝"></span>
         <span class="sys">✳︎</span>
         <span class="sys">🔋</span>
         <span class="sys">􀙇</span>
@@ -310,8 +308,10 @@
   </section>
 
   <footer>
-    <span class="fname"><img src="logo.webp" alt="캡슝"></span>
+    <img class="word" src="logo.webp" alt="캡슝"><br>
     캡슝 · macOS 메뉴바 캡쳐 도구 · 개인 배포용<br>
     Python + PyObjC + rumps 로 제작
   </footer>
 </div>
+</body>
+</html>
