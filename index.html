@@ -88,8 +88,9 @@
           padding: 4px 11px; background: var(--surface); }
 
   /* 히어로 (2컬럼: 좌 캐릭터 / 우 텍스트) */
-  .hero { display: flex; align-items: center; gap: clamp(20px, 4vw, 48px);
-          text-align: left; padding-block: 24px 48px; }
+  .hero { display: flex; align-items: center; gap: clamp(32px, 8vw, 110px);
+          text-align: left; padding-block: 24px 48px;
+          min-height: calc(100vh - 72px); min-height: calc(100svh - 72px); }
   .hero-left { flex: 0 0 auto; }
   .hero-right { flex: 1 1 0; min-width: 0; }
   .hero .herocat { width: clamp(200px, 30vw, 360px); height: auto; display: block;
@@ -100,7 +101,7 @@
   .hero .stage { margin: 18px 0 0; max-width: 340px; }
   .hero .dl { align-items: flex-start; margin-top: 18px; }
   @media (max-width: 760px) {
-    .hero { flex-direction: column; text-align: center; }
+    .hero { flex-direction: column; text-align: center; min-height: auto; }
     .hero .herocat { width: clamp(220px, 58vw, 320px); margin: 0 auto; }
     .hero .lead { margin-left: auto; margin-right: auto; }
     .hero .stage { margin-left: auto; margin-right: auto; }
