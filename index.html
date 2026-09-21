@@ -97,8 +97,8 @@
   .hero h1 { font-size: clamp(26px, 4.2vw, 42px); font-weight: 800; line-height: 1.12; }
   .hero .lead { color: var(--muted); font-size: clamp(15px, 1.9vw, 18px);
                 max-width: 34em; margin: 14px 0 0; }
-  .hero .stage { margin: 26px 0 0; }
-  .hero .dl { align-items: flex-start; margin-top: 24px; }
+  .hero .stage { margin: 18px 0 0; max-width: 340px; }
+  .hero .dl { align-items: flex-start; margin-top: 18px; }
   @media (max-width: 760px) {
     .hero { flex-direction: column; text-align: center; }
     .hero .herocat { width: clamp(220px, 58vw, 320px); margin: 0 auto; }
@@ -108,22 +108,22 @@
   }
 
   /* 메뉴바 목업 */
-  .stage { margin: 34px auto 0; max-width: 460px; border-radius: 18px; overflow: hidden;
+  .stage { margin: 34px auto 0; max-width: 380px; border-radius: 16px; overflow: hidden;
            border: 1px solid var(--line);
            background: radial-gradient(120% 90% at 30% 0%, var(--accent-soft), transparent 60%),
                        linear-gradient(180deg, var(--surface-2), var(--surface));
-           box-shadow: 0 24px 60px -30px var(--cap-shadow); padding: 0 0 30px; }
-  .menubar { height: 30px; background: var(--mb-bg); color: var(--mb-ink);
+           box-shadow: 0 24px 60px -30px var(--cap-shadow); padding: 0 0 20px; }
+  .menubar { height: 26px; background: var(--mb-bg); color: var(--mb-ink);
              display: flex; align-items: center; justify-content: flex-end;
-             gap: 16px; padding: 0 14px; font-size: 13px; backdrop-filter: blur(8px); }
+             gap: 14px; padding: 0 12px; font-size: 12px; backdrop-filter: blur(8px); }
   .menubar .sys { opacity: 0.9; }
   .menubar .cam { display: flex; align-items: center; }
   .menubar .cam img { height: 17px; width: auto; display: block; }
-  .menu { width: 250px; margin: 8px 14px 0 auto; background: var(--mb-menu); color: var(--mb-ink);
-          border: 1px solid var(--mb-line); border-radius: 10px; padding: 6px; font-size: 13.5px;
+  .menu { width: 205px; margin: 7px 12px 0 auto; background: var(--mb-menu); color: var(--mb-ink);
+          border: 1px solid var(--mb-line); border-radius: 10px; padding: 5px; font-size: 12px;
           box-shadow: 0 18px 40px -18px rgba(0,0,0,0.55); backdrop-filter: blur(14px); }
   .menu .row { display: flex; align-items: center; justify-content: space-between;
-               padding: 6px 9px; border-radius: 6px; }
+               padding: 5px 8px; border-radius: 6px; }
   .menu .row.hi { background: var(--mb-hi); color: #fff; }
   .menu .row .sc { color: var(--mb-dim); font-size: 12.5px; }
   .menu .row.hi .sc { color: rgba(255,255,255,0.85); }
