@@ -160,6 +160,14 @@
   .feature p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
   .tag-new { font-size: 10.5px; font-weight: 800; letter-spacing: .04em;
              color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 2px 8px; }
+  .feature-wide { grid-column: 1 / -1; }
+  .ai-logos { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .ai-logo { display: inline-flex; align-items: center; gap: 9px;
+             padding: 7px 15px 7px 7px; border: 1px solid var(--line);
+             border-radius: 999px; font-size: 14.5px; font-weight: 700; }
+  .ai-logo .tile { width: 28px; height: 28px; border-radius: 8px; flex: 0 0 auto;
+                   display: inline-flex; align-items: center; justify-content: center; }
+  .ai-logo .tile svg { width: 18px; height: 18px; display: block; }
 
   /* 설치 */
   .steps { list-style: none; counter-reset: s; padding: 0; margin: 24px 0 0;
@@ -249,6 +257,15 @@
     <div class="eyebrow">기능</div>
     <h2>필요한 캡쳐, 다 됩니다</h2>
     <div class="features">
+      <div class="feature feature-wide">
+        <h3>AI로 바로 보내기 <span class="tag-new">NEW</span></h3>
+        <p>캡쳐 저장 창에서 아래 버튼 하나만 누르면, 해당 AI 데스크톱 앱이 열리며 이미지가 대화창에 자동으로 붙습니다. 스크린샷 → 클릭 한 번 → 바로 질문. <span style="opacity:.65">(손쉬운 사용 권한 1회 허용, 각 앱 설치 필요)</span></p>
+        <div class="ai-logos">
+          <span class="ai-logo"><span class="tile" style="background:#10A37F"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h14v9H9l-4 4z"/></svg></span>ChatGPT</span>
+          <span class="ai-logo"><span class="tile" style="background:#D97757"><svg viewBox="0 0 24 24" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="20"/><line x1="5" y1="7.5" x2="19" y2="16.5"/><line x1="19" y1="7.5" x2="5" y2="16.5"/></svg></span>Claude</span>
+          <span class="ai-logo"><span class="tile" style="background:linear-gradient(135deg,#4285F4,#9B72CB 55%,#D96570)"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 2C12 7 7 12 2 12C7 12 12 17 12 22C12 17 17 12 22 12C17 12 12 7 12 2Z"/></svg></span>Gemini</span>
+        </div>
+      </div>
       <div class="feature">
         <div class="ic">⌨️</div>
         <h3>전역 단축키 캡쳐</h3>
@@ -278,11 +295,6 @@
         <div class="ic">🎬</div>
         <h3>동영상 캡쳐</h3>
         <p>영역 지정 후 화면 녹화. ffmpeg가 있으면 mp4, 없으면 mov로 저장.</p>
-      </div>
-      <div class="feature">
-        <div class="ic">🤖</div>
-        <h3>AI로 바로 보내기 <span class="tag-new">NEW</span></h3>
-        <p>캡쳐 저장 창의 <b>GPT · Claude · Gemini</b> 버튼을 누르면, 해당 데스크톱 앱이 열리며 이미지가 대화창에 자동으로 붙습니다. 스크린샷 찍고 → 클릭 한 번 → AI에게 질문. (손쉬운 사용 권한 1회 허용, 각 앱 설치 필요)</p>
       </div>
     </div>
   </section>
