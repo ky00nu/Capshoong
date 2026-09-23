@@ -15,161 +15,221 @@
 <meta property="og:title" content="줍숑 — 유튜브 다운로더">
 <meta property="og:description" content="유튜브 URL만 붙여넣으면 원하는 화질로 mp4 다운로드. 맥용 가벼운 다운로더.">
 <meta property="og:url" content="https://ky00nu.github.io/Capshoong/jupshoong.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="줍숑 — 유튜브 다운로더">
+<meta name="twitter:description" content="유튜브 URL만 붙여넣으면 원하는 화질로 mp4 다운로드.">
+
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
 
 <style>
-  /* ── Airbnb-inspired design system (DESIGN-airbnb.md) ──
-     순백 캔버스 · 절제된 굵기 · 부드러운 라운드 · 단일 그림자 · 넉넉한 여백.
-     Rausch 자리에는 캡슝 패밀리 레드(#EB4448)를 액센트로 사용. 라이트 전용. */
   :root {
-    --primary: #EB4448;
-    --primary-active: #d0343a;
-    --ink: #222222;
-    --body: #3f3f3f;
-    --muted: #6a6a6a;
-    --muted-soft: #929292;
-    --hairline: #dddddd;
-    --hairline-soft: #ebebeb;
-    --canvas: #ffffff;
-    --surface-soft: #f7f7f7;
-    --surface-strong: #f2f2f2;
-    --on-primary: #ffffff;
-    --shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.10) 0 4px 8px 0;
-    --r-sm: 8px;
-    --r-md: 14px;
-    --r-lg: 20px;
-    --r-full: 9999px;
+    --bg: #F7F6F4;
+    --surface: #FFFFFF;
+    --surface-2: #F0EEEB;
+    --ink: #1A1614;
+    --muted: #6B6560;
+    --line: #E6E2DD;
+    --accent: #EB4448;
+    --accent-soft: rgba(235,68,72,0.10);
+    --accent-ink: #FFFFFF;
+    --cap-bg: #FFFFFF;
+    --cap-line: #DAD5CF;
+    --cap-shadow: rgba(26,22,20,0.14);
+    --mb-bg: rgba(28,30,34,0.82);
+    --mb-ink: #F2F3F5;
+    --mb-menu: rgba(44,46,52,0.96);
+    --mb-line: rgba(255,255,255,0.12);
+    --mb-dim: #B4B7BE;
+    --mb-hi: #EB4448;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14110F; --surface: #1D1917; --surface-2: #251F1C;
+      --ink: #F0EBE6; --muted: #A99F97; --line: #2E2723;
+      --accent: #FF5A56; --accent-soft: rgba(255,90,86,0.15); --accent-ink: #FFFFFF;
+      --cap-bg: #251F1C; --cap-line: #3A322D; --cap-shadow: rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14110F; --surface: #1D1917; --surface-2: #251F1C;
+    --ink: #F0EBE6; --muted: #A99F97; --line: #2E2723;
+    --accent: #FF5A56; --accent-soft: rgba(255,90,86,0.15); --accent-ink: #FFFFFF;
+    --cap-bg: #251F1C; --cap-line: #3A322D; --cap-shadow: rgba(0,0,0,0.5);
   }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   img { max-width: 100%; }
   body {
-    background: var(--canvas); color: var(--ink);
-    font-family: "Inter", -apple-system, system-ui, Roboto, "Helvetica Neue", sans-serif;
-    line-height: 1.5; -webkit-font-smoothing: antialiased;
-    letter-spacing: 0;
+    background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 1040px; margin: 0 auto; padding-inline: 24px; }
-  a { color: inherit; }
+  .wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; padding-block: 0; }
+  h1, h2, h3 { font-family: "Gothic A1", "Noto Sans KR", sans-serif;
+               text-wrap: balance; letter-spacing: -0.01em; margin: 0; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, "SF Mono", monospace; }
 
-  /* Top nav — 흰 배경, 하단 헤어라인, 좌 워드마크 / 우 네비 링크 */
+  /* 헤더 */
   .top { display: flex; align-items: center; justify-content: space-between;
-         height: 80px; border-bottom: 1px solid var(--hairline); }
-  .brand { display: flex; align-items: baseline; gap: 10px; }
-  .brand .wt { font-size: 24px; font-weight: 700; color: var(--primary); letter-spacing: -0.4px; }
-  .brand .badge { font-size: 13px; font-weight: 500; color: var(--muted); }
-  .navlink { font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none;
-             padding: 8px 16px; border-radius: var(--r-full); border: 1px solid var(--hairline);
-             background: var(--canvas); transition: box-shadow .15s ease; }
-  .navlink:hover { box-shadow: var(--shadow); }
+         padding-block: 20px; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .appicon { height: 28px; width: 28px; border-radius: 7px; display: block;
+                    box-shadow: 0 2px 6px -1px var(--cap-shadow); }
+  .brand .word { height: 22px; width: auto; display: block; }
+  .chip { font-size: 12px; font-weight: 600; color: var(--muted);
+          border: 1px solid var(--line); border-radius: 999px;
+          padding: 4px 11px; background: var(--surface); }
+  a.chip { font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; padding: 6px 14px;
+           transition: color .12s ease, border-color .12s ease; }
+  a.chip:hover { color: var(--accent); border-color: var(--accent); }
 
-  /* Hero — 캡슝과 동일한 2컬럼(좌 마스코트 / 우 텍스트) */
-  .hero { display: flex; align-items: center; gap: clamp(28px, 6vw, 80px);
-          padding-block: 40px 44px; }
+  /* 히어로 (2컬럼: 좌 캐릭터 / 우 텍스트) */
+  .hero { display: flex; align-items: center; gap: clamp(32px, 8vw, 110px);
+          text-align: left; padding-block: 24px 48px;
+          min-height: calc(100vh - 72px); min-height: calc(100svh - 72px); }
   .hero-left { flex: 0 0 auto; }
   .hero-right { flex: 1 1 0; min-width: 0; }
-  .jupcat { width: clamp(200px, 30vw, 360px); height: auto; display: block;
-            filter: drop-shadow(0 22px 26px rgba(20,20,20,0.22)); }
-  .hero h1 { font-size: clamp(26px, 4vw, 34px); font-weight: 700; line-height: 1.2;
-             letter-spacing: -0.4px; margin: 0; }
-  .hero .lead { color: var(--body); font-size: 18px; font-weight: 400;
-                max-width: 30em; margin: 16px 0 0; }
-  .cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 28px; }
-  @media (max-width: 744px) {
-    .hero { flex-direction: column; text-align: center; gap: 24px; }
-    .jupcat { width: clamp(200px, 56vw, 300px); margin: 0 auto; }
+  .hero .herocat { width: clamp(200px, 30vw, 360px); height: auto; display: block;
+                   filter: drop-shadow(0 22px 26px rgba(30,20,15,0.20)); }
+  .hero h1 { font-size: clamp(26px, 4.2vw, 42px); font-weight: 800; line-height: 1.12; }
+  .hero h1 .h1-word { height: 1.6em; width: auto; vertical-align: -0.22em; display: inline-block; }
+  .hero .lead { color: var(--muted); font-size: clamp(15px, 1.9vw, 18px);
+                max-width: 34em; margin: 14px 0 0; }
+  .hero .stage { margin: 18px 0 0; max-width: 340px; }
+  .hero .dl { align-items: flex-start; margin-top: 18px; }
+  @media (max-width: 760px) {
+    .hero { flex-direction: column; text-align: center; min-height: auto; }
+    .hero .herocat { width: clamp(220px, 58vw, 320px); margin: 0 auto; }
     .hero .lead { margin-left: auto; margin-right: auto; }
-    .cta-row { justify-content: center; }
+    .hero .stage { margin-left: auto; margin-right: auto; }
+    .hero .dl { align-items: center; }
   }
-  .btn { display: inline-flex; align-items: center; gap: 8px;
-         background: var(--primary); color: var(--on-primary);
-         font-size: 16px; font-weight: 500; text-decoration: none;
-         height: 48px; padding: 0 24px; border-radius: var(--r-sm);
-         transition: background .15s ease; }
-  .btn:hover { background: var(--primary-active); }
-  .btn .arw { font-size: 18px; }
-  .meta { color: var(--muted); font-size: 14px; }
-  .meta a { color: var(--primary); text-decoration: none; }
-  .meta a:hover { text-decoration: underline; }
+
+  /* 메뉴바 목업 */
+  .stage { margin: 34px auto 0; max-width: 380px; border-radius: 16px; overflow: hidden;
+           border: 1px solid var(--line);
+           background: radial-gradient(120% 90% at 30% 0%, var(--accent-soft), transparent 60%),
+                       linear-gradient(180deg, var(--surface-2), var(--surface));
+           box-shadow: 0 24px 60px -30px var(--cap-shadow); padding: 0 0 20px; }
+  .menubar { height: 26px; background: var(--mb-bg); color: var(--mb-ink);
+             display: flex; align-items: center; justify-content: flex-end;
+             gap: 14px; padding: 0 12px; font-size: 12px; backdrop-filter: blur(8px); }
+  .menubar .sys { opacity: 0.9; }
+  .menubar .cam { display: flex; align-items: center; }
+  .menubar .cam img { height: 17px; width: auto; display: block; }
+  .menu { width: 205px; margin: 7px 12px 0 auto; background: var(--mb-menu); color: var(--mb-ink);
+          border: 1px solid var(--mb-line); border-radius: 10px; padding: 5px; font-size: 12px;
+          box-shadow: 0 18px 40px -18px rgba(0,0,0,0.55); backdrop-filter: blur(14px); }
+  .menu .row { display: flex; align-items: center; justify-content: space-between;
+               padding: 5px 8px; border-radius: 6px; }
+  .menu .row.hi { background: var(--mb-hi); color: #fff; }
+  .menu .row .sc { color: var(--mb-dim); font-size: 12.5px; }
+  .menu .row.hi .sc { color: rgba(255,255,255,0.85); }
+  .menu .sep { height: 1px; background: var(--mb-line); margin: 6px 8px; }
+  .menu .dim { color: var(--mb-dim); }
+
+  /* 다운로드 */
+  .dl { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 34px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px;
+         background: var(--accent); color: var(--accent-ink);
+         font-weight: 700; font-size: 17px; font-family: "Gothic A1", sans-serif;
+         text-decoration: none; padding: 15px 30px; border-radius: 14px;
+         box-shadow: 0 14px 30px -12px var(--accent);
+         transition: transform .12s ease, box-shadow .12s ease; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 20px 38px -12px var(--accent); }
+  .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .btn .arw { font-size: 20px; }
+  .dl .meta { color: var(--muted); font-size: 13.5px; }
+  .dl .meta a { color: var(--accent); }
 
   /* 섹션 */
-  section { padding-block: 56px; border-top: 1px solid var(--hairline-soft); }
-  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
-             text-transform: uppercase; color: var(--primary); }
-  section h2 { font-size: clamp(21px, 3vw, 24px); font-weight: 700; margin: 8px 0 0;
-               letter-spacing: -0.2px; }
-  section .sub { color: var(--body); font-size: 16px; margin: 8px 0 0; max-width: 34em; }
+  section { padding-block: 40px; border-top: 1px solid var(--line); }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.09em;
+             text-transform: uppercase; color: var(--accent); }
+  section h2 { font-size: clamp(24px, 4vw, 30px); margin-top: 8px; font-weight: 800; }
 
-  /* 기능 카드 (photo-first가 아닌 텍스트 카드, md 라운드 + 단일 그림자 hover) */
-  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 28px; }
-  .card { background: var(--canvas); border: 1px solid var(--hairline);
-          border-radius: var(--r-md); padding: 24px; transition: box-shadow .15s ease; }
-  .card:hover { box-shadow: var(--shadow); }
-  .card .ic { font-size: 22px; }
-  .card h3 { font-size: 16px; font-weight: 600; margin: 12px 0 0; }
-  .card p { font-size: 14px; font-weight: 400; color: var(--body); margin: 6px 0 0; line-height: 1.43; }
+  /* 기능 */
+  .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 24px; }
+  .feature { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
+  .feature .ic { font-size: 22px; }
+  .feature h3 { font-size: 16.5px; margin-top: 10px; font-weight: 700;
+                display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .feature p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+  .tag-new { font-size: 10.5px; font-weight: 800; letter-spacing: .04em;
+             color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 2px 8px; }
+  .feature-wide { grid-column: 1 / -1; }
+  .ai-logos { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+  .ai-logo { display: inline-flex; align-items: center; gap: 9px;
+             padding: 7px 15px 7px 7px; border: 1px solid var(--line);
+             border-radius: 999px; font-size: 14.5px; font-weight: 700; }
+  .ai-logo .tile { width: 28px; height: 28px; border-radius: 8px; flex: 0 0 auto;
+                   object-fit: cover; display: block; }
 
-  /* 설치 스텝 — 원형 넘버 + 텍스트, 하드코너 없음 */
-  .steps { list-style: none; counter-reset: s; padding: 0; margin: 28px 0 0;
-           display: flex; flex-direction: column; gap: 12px; }
-  .steps li { counter-increment: s; position: relative; padding-left: 52px; padding-block: 6px; }
-  .steps li::before { content: counter(s); position: absolute; left: 0; top: 2px;
-                      width: 32px; height: 32px; border-radius: var(--r-full);
-                      background: var(--primary); color: var(--on-primary);
-                      font-size: 14px; font-weight: 600; display: grid; place-items: center; }
-  .steps li b { font-weight: 600; }
+  /* 설치 */
+  .steps { list-style: none; counter-reset: s; padding: 0; margin: 24px 0 0;
+           display: flex; flex-direction: column; gap: 14px; }
+  .steps li { counter-increment: s; position: relative; background: var(--surface);
+              border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px 18px 62px; }
+  .steps li::before { content: counter(s); position: absolute; left: 16px; top: 16px;
+                      width: 30px; height: 30px; border-radius: 10px;
+                      background: var(--accent-soft); color: var(--accent);
+                      font-family: "Gothic A1", sans-serif; font-weight: 800; font-size: 15px;
+                      display: grid; place-items: center; }
+  .steps li b { font-weight: 700; }
   .steps li p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-  .kbd { font-family: ui-monospace, "SF Mono", monospace; font-size: 12.5px;
-         background: var(--surface-soft); border: 1px solid var(--hairline);
-         border-radius: var(--r-sm); padding: 1px 7px; color: var(--ink); }
+  .kbd { font-family: "JetBrains Mono", monospace; font-size: 12.5px; background: var(--cap-bg);
+         border: 1px solid var(--cap-line); border-radius: 6px; padding: 1px 6px; color: var(--ink); }
+  .term { margin-top: 10px; background: #0C0F15; color: #D6E2F0; border-radius: 10px;
+          padding: 12px 14px; overflow-x: auto; font-family: "JetBrains Mono", monospace;
+          font-size: 12.5px; border: 1px solid #242C38; }
 
   /* 요구사항 */
-  .req { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-  .req .item { border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 20px; }
-  .req .k { font-size: 13px; color: var(--muted); font-weight: 500; }
-  .req .v { font-size: 16px; font-weight: 600; margin-top: 4px; }
+  .req { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+  .req .item { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+  .req .k { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .req .v { font-family: "Gothic A1", sans-serif; font-weight: 700; font-size: 16px; margin-top: 3px; }
 
-  .note { margin-top: 24px; font-size: 14px; color: var(--body);
-          background: var(--surface-soft); border: 1px solid var(--hairline-soft);
-          border-radius: var(--r-md); padding: 16px 18px; }
+  .note { margin-top: 20px; font-size: 13.5px; color: var(--muted); background: var(--accent-soft);
+          border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
 
-  footer { border-top: 1px solid var(--hairline); padding-block: 40px 56px;
-           color: var(--muted); font-size: 14px; }
-  footer a { color: var(--ink); text-decoration: none; font-weight: 500; }
-  footer a:hover { text-decoration: underline; }
+  footer { border-top: 1px solid var(--line); padding-block: 28px 44px;
+           color: var(--muted); font-size: 13px; text-align: center; }
+  footer .word { height: 22px; width: auto; margin-bottom: 10px; opacity: .9; }
 
-  @media (max-width: 744px) {
-    .cards, .req { grid-template-columns: 1fr; }
-    .top { height: 64px; }
-  }
+  @media (max-width: 560px) { .features, .req { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
     <div class="brand">
-      <span class="wt">줍숑</span>
-      <span class="badge">YouTube 다운로더</span>
+      <img class="appicon" src="jup-icon.png" alt="줍숑 아이콘">
+      <img class="word" src="jup-logo.png" alt="줍숑">
     </div>
-    <a class="navlink" href="index.html">캡슝 →</a>
+    <a class="chip" href="index.html">캡슝 →</a>
   </div>
 
   <div class="hero">
     <div class="hero-left">
-      <img class="jupcat" src="jup-cat.png" alt="줍숑 마스코트 캐릭터">
+      <img class="herocat" src="jup-cat.png" alt="줍숑 마스코트 캐릭터">
     </div>
     <div class="hero-right">
-    <h1>유튜브를 mp4로, 슈우웅</h1>
-    <p class="lead">유튜브 URL만 붙여넣으면 원하는 화질로 바로 다운로드. 캡슝과 같은 감성의 가벼운 맥 앱이에요. 별도 설정 없이, 실행하면 다운로드 화면이 열립니다.</p>
-    <div class="cta-row">
-      <a class="btn" href="https://github.com/ky00nu/Capshoong/releases/download/jupshoong-v1.0/Jupshoong_1.0.dmg">
+    <h1>유튜브를 mp4로. <img src="jup-logo.png" alt="줍숑" class="h1-word"></h1>
+    <p class="lead">유튜브 URL만 붙여넣으면 원하는 화질로 바로 다운로드. 캡슝과 같은 감성의 가벼운 맥 앱이에요. 실행하면 다운로드 화면이 열려요 — 클릭 한 번으로 슈우웅~!</p>
+
+    <div class="dl">
+      <a class="btn" id="download" href="https://github.com/ky00nu/Capshoong/releases/download/jupshoong-v1.0/Jupshoong_1.0.dmg">
         <span class="arw">↓</span> 줍숑 다운로드 (.dmg)
       </a>
-      <span class="meta">v1.0 · Apple Silicon 전용 · <a href="https://github.com/ky00nu/Capshoong/releases/tag/jupshoong-v1.0">릴리스 보기</a></span>
+      <div class="meta">
+        v1.0 · Apple Silicon 전용 · YouTube → mp4<br>
+        직접 링크: <a href="https://github.com/ky00nu/Capshoong/releases/tag/jupshoong-v1.0">줍숑 릴리스 보기</a>
+      </div>
     </div>
     </div>
   </div>
@@ -177,24 +237,23 @@
   <section>
     <div class="eyebrow">기능</div>
     <h2>이렇게 동작해요</h2>
-    <p class="sub">붙여넣고, 고르고, 받으면 끝. 세 단계로 유튜브 영상을 내 맥에 저장합니다.</p>
-    <div class="cards">
-      <div class="card">
+    <div class="features">
+      <div class="feature">
         <div class="ic">🔗</div>
         <h3>URL 붙여넣기</h3>
         <p>유튜브 링크를 붙여넣고 “정보 가져오기”만 누르면 제목·길이·화질이 뜹니다.</p>
       </div>
-      <div class="card">
+      <div class="feature">
         <div class="ic">🎚️</div>
         <h3>화질 선택</h3>
         <p>최고 화질(자동)부터 4K·1080p·720p까지, 원하는 화질을 골라 받습니다.</p>
       </div>
-      <div class="card">
+      <div class="feature">
         <div class="ic">🎬</div>
         <h3>mp4로 저장</h3>
         <p>H.264 mp4로 변환해 어디서나 재생. ffmpeg가 앱에 내장되어 별도 설치가 필요 없어요.</p>
       </div>
-      <div class="card">
+      <div class="feature">
         <div class="ic">🖥️</div>
         <h3>브라우저 화면</h3>
         <p>실행하면 브라우저에 깔끔한 다운로드 화면이 열립니다. 진행률도 실시간으로.</p>
@@ -205,6 +264,7 @@
   <section>
     <div class="eyebrow">설치</div>
     <h2>드래그 한 번이면 끝</h2>
+    <p class="lead" style="margin:12px 0 0;color:var(--muted)">Apple 개발자 서명이 없는 개인 배포용이라, 첫 실행 때 macOS가 경고를 한 번 보여줍니다. 아래 순서대로 하면 됩니다.</p>
     <ol class="steps">
       <li>
         <b>받은 <span class="kbd">.dmg</span>를 열고 <span class="kbd">줍숑</span> 을 <span class="kbd">Applications</span> 로 드래그</b>
@@ -212,14 +272,17 @@
       </li>
       <li>
         <b>첫 실행 시 “확인되지 않은 개발자” 경고 → <span class="kbd">여전히 열기</span></b>
-        <p>시스템 설정 → 개인정보 보호 및 보안 → 아래로 스크롤해 “여전히 열기”. 이후로는 바로 열립니다.</p>
+        <p>시스템 설정 → 개인정보 보호 및 보안 → 아래로 스크롤해 <b>여전히 열기</b>. 이후로는 바로 열립니다.</p>
       </li>
       <li>
         <b>실행하면 브라우저에 다운로드 화면이 열립니다</b>
         <p>유튜브 URL을 붙여넣고 화질을 골라 받으세요. 받은 영상은 다운로드 폴더에 저장됩니다.</p>
       </li>
     </ol>
-    <div class="note">Apple 개발자 공증이 없는 무료 배포판이라 첫 실행 경고가 한 번 뜹니다. 위 “여전히 열기”를 한 번만 해주면 됩니다.</div>
+    <div class="note">
+      💡 “손상되어 열 수 없습니다”가 뜨면 격리 속성만 지우면 됩니다 (설치 후):
+      <div class="term">xattr -dr com.apple.quarantine /Applications/줍숑.app</div>
+    </div>
   </section>
 
   <section>
@@ -230,10 +293,15 @@
       <div class="item"><div class="k">macOS</div><div class="v">11 Big Sur 이상</div></div>
       <div class="item"><div class="k">ffmpeg</div><div class="v">앱에 내장</div></div>
     </div>
+    <div class="note">
+      ⚠️ 이 빌드는 <b>Apple Silicon 전용</b>입니다. 인텔 맥에서는 동작하지 않아요. · 개발자 서명이 없어 위 “여전히 열기” 과정을 한 번 거쳐야 합니다.
+    </div>
   </section>
 
   <footer>
-    줍숑 · 캡슝 패밀리 &nbsp;·&nbsp; <a href="index.html">← 캡슝으로 돌아가기</a>
+    <img class="word" src="jup-logo.png" alt="줍숑"><br>
+    줍숑 · macOS 유튜브 다운로더 · 개인 배포용<br>
+    <a href="index.html" style="color:var(--accent);text-decoration:none">← 캡슝으로 돌아가기</a>
   </footer>
 </div>
 </body>
