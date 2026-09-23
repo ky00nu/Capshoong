@@ -86,6 +86,9 @@
   .chip { font-size: 12px; font-weight: 600; color: var(--muted);
           border: 1px solid var(--line); border-radius: 999px;
           padding: 4px 11px; background: var(--surface); }
+  a.chip { font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; padding: 6px 14px;
+           transition: color .12s ease, border-color .12s ease; }
+  a.chip:hover { color: var(--accent); border-color: var(--accent); }
 
   /* 히어로 (2컬럼: 좌 캐릭터 / 우 텍스트) */
   .hero { display: flex; align-items: center; gap: clamp(32px, 8vw, 110px);
@@ -211,7 +214,7 @@
       <img class="appicon" src="icon.png" alt="캡슝 아이콘">
       <img class="word" src="logo.webp" alt="캡슝">
     </div>
-    <span class="chip">arm64 · Apple Silicon</span>
+    <a class="chip" href="jupshoong.html">줍숑 →</a>
   </div>
 
   <div class="hero">

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>줍숑 · YouTube 다운로더</title>
+
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="줍숑">
+<meta property="og:title" content="줍숑 — 유튜브 다운로더">
+<meta property="og:description" content="유튜브 URL만 붙여넣으면 원하는 화질로 mp4 다운로드. 맥용 가벼운 다운로더.">
+<meta property="og:url" content="https://ky00nu.github.io/Capshoong/jupshoong.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+<style>
+  /* ── Airbnb-inspired design system (DESIGN-airbnb.md) ──
+     순백 캔버스 · 절제된 굵기 · 부드러운 라운드 · 단일 그림자 · 넉넉한 여백.
+     Rausch 자리에는 캡슝 패밀리 레드(#EB4448)를 액센트로 사용. 라이트 전용. */
+  :root {
+    --primary: #EB4448;
+    --primary-active: #d0343a;
+    --ink: #222222;
+    --body: #3f3f3f;
+    --muted: #6a6a6a;
+    --muted-soft: #929292;
+    --hairline: #dddddd;
+    --hairline-soft: #ebebeb;
+    --canvas: #ffffff;
+    --surface-soft: #f7f7f7;
+    --surface-strong: #f2f2f2;
+    --on-primary: #ffffff;
+    --shadow: rgba(0,0,0,0.02) 0 0 0 1px, rgba(0,0,0,0.04) 0 2px 6px 0, rgba(0,0,0,0.10) 0 4px 8px 0;
+    --r-sm: 8px;
+    --r-md: 14px;
+    --r-lg: 20px;
+    --r-full: 9999px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  img { max-width: 100%; }
+  body {
+    background: var(--canvas); color: var(--ink);
+    font-family: "Inter", -apple-system, system-ui, Roboto, "Helvetica Neue", sans-serif;
+    line-height: 1.5; -webkit-font-smoothing: antialiased;
+    letter-spacing: 0;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding-inline: 24px; }
+  a { color: inherit; }
+
+  /* Top nav — 흰 배경, 하단 헤어라인, 좌 워드마크 / 우 네비 링크 */
+  .top { display: flex; align-items: center; justify-content: space-between;
+         height: 80px; border-bottom: 1px solid var(--hairline); }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand .wt { font-size: 24px; font-weight: 700; color: var(--primary); letter-spacing: -0.4px; }
+  .brand .badge { font-size: 13px; font-weight: 500; color: var(--muted); }
+  .navlink { font-size: 16px; font-weight: 600; color: var(--ink); text-decoration: none;
+             padding: 8px 16px; border-radius: var(--r-full); border: 1px solid var(--hairline);
+             background: var(--canvas); transition: box-shadow .15s ease; }
+  .navlink:hover { box-shadow: var(--shadow); }
+
+  /* Hero — 큰 사진 대신 절제된 타이포 + CTA */
+  .hero { padding-block: 56px 40px; }
+  .hero h1 { font-size: clamp(26px, 4vw, 34px); font-weight: 700; line-height: 1.2;
+             letter-spacing: -0.4px; margin: 0; }
+  .hero .lead { color: var(--body); font-size: 18px; font-weight: 400;
+                max-width: 33em; margin: 16px 0 0; }
+  .cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 28px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px;
+         background: var(--primary); color: var(--on-primary);
+         font-size: 16px; font-weight: 500; text-decoration: none;
+         height: 48px; padding: 0 24px; border-radius: var(--r-sm);
+         transition: background .15s ease; }
+  .btn:hover { background: var(--primary-active); }
+  .btn .arw { font-size: 18px; }
+  .meta { color: var(--muted); font-size: 14px; }
+  .meta a { color: var(--primary); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+
+  /* 섹션 */
+  section { padding-block: 56px; border-top: 1px solid var(--hairline-soft); }
+  .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+             text-transform: uppercase; color: var(--primary); }
+  section h2 { font-size: clamp(21px, 3vw, 24px); font-weight: 700; margin: 8px 0 0;
+               letter-spacing: -0.2px; }
+  section .sub { color: var(--body); font-size: 16px; margin: 8px 0 0; max-width: 34em; }
+
+  /* 기능 카드 (photo-first가 아닌 텍스트 카드, md 라운드 + 단일 그림자 hover) */
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 28px; }
+  .card { background: var(--canvas); border: 1px solid var(--hairline);
+          border-radius: var(--r-md); padding: 24px; transition: box-shadow .15s ease; }
+  .card:hover { box-shadow: var(--shadow); }
+  .card .ic { font-size: 22px; }
+  .card h3 { font-size: 16px; font-weight: 600; margin: 12px 0 0; }
+  .card p { font-size: 14px; font-weight: 400; color: var(--body); margin: 6px 0 0; line-height: 1.43; }
+
+  /* 설치 스텝 — 원형 넘버 + 텍스트, 하드코너 없음 */
+  .steps { list-style: none; counter-reset: s; padding: 0; margin: 28px 0 0;
+           display: flex; flex-direction: column; gap: 12px; }
+  .steps li { counter-increment: s; position: relative; padding-left: 52px; padding-block: 6px; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 2px;
+                      width: 32px; height: 32px; border-radius: var(--r-full);
+                      background: var(--primary); color: var(--on-primary);
+                      font-size: 14px; font-weight: 600; display: grid; place-items: center; }
+  .steps li b { font-weight: 600; }
+  .steps li p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+  .kbd { font-family: ui-monospace, "SF Mono", monospace; font-size: 12.5px;
+         background: var(--surface-soft); border: 1px solid var(--hairline);
+         border-radius: var(--r-sm); padding: 1px 7px; color: var(--ink); }
+
+  /* 요구사항 */
+  .req { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .req .item { border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 20px; }
+  .req .k { font-size: 13px; color: var(--muted); font-weight: 500; }
+  .req .v { font-size: 16px; font-weight: 600; margin-top: 4px; }
+
+  .note { margin-top: 24px; font-size: 14px; color: var(--body);
+          background: var(--surface-soft); border: 1px solid var(--hairline-soft);
+          border-radius: var(--r-md); padding: 16px 18px; }
+
+  footer { border-top: 1px solid var(--hairline); padding-block: 40px 56px;
+           color: var(--muted); font-size: 14px; }
+  footer a { color: var(--ink); text-decoration: none; font-weight: 500; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 744px) {
+    .cards, .req { grid-template-columns: 1fr; }
+    .top { height: 64px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <span class="wt">줍숑</span>
+      <span class="badge">YouTube 다운로더</span>
+    </div>
+    <a class="navlink" href="index.html">캡슝 →</a>
+  </div>
+
+  <div class="hero">
+    <h1>유튜브를 mp4로, 슈우웅</h1>
+    <p class="lead">유튜브 URL만 붙여넣으면 원하는 화질로 바로 다운로드. 캡슝과 같은 감성의 가벼운 맥 앱이에요. 별도 설정 없이, 실행하면 다운로드 화면이 열립니다.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://github.com/ky00nu/Capshoong/releases/download/jupshoong-v1.0/Jupshoong_1.0.dmg">
+        <span class="arw">↓</span> 줍숑 다운로드 (.dmg)
+      </a>
+      <span class="meta">v1.0 · Apple Silicon 전용 · <a href="https://github.com/ky00nu/Capshoong/releases/tag/jupshoong-v1.0">릴리스 보기</a></span>
+    </div>
+  </div>
+
+  <section>
+    <div class="eyebrow">기능</div>
+    <h2>이렇게 동작해요</h2>
+    <p class="sub">붙여넣고, 고르고, 받으면 끝. 세 단계로 유튜브 영상을 내 맥에 저장합니다.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="ic">🔗</div>
+        <h3>URL 붙여넣기</h3>
+        <p>유튜브 링크를 붙여넣고 “정보 가져오기”만 누르면 제목·길이·화질이 뜹니다.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🎚️</div>
+        <h3>화질 선택</h3>
+        <p>최고 화질(자동)부터 4K·1080p·720p까지, 원하는 화질을 골라 받습니다.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🎬</div>
+        <h3>mp4로 저장</h3>
+        <p>H.264 mp4로 변환해 어디서나 재생. ffmpeg가 앱에 내장되어 별도 설치가 필요 없어요.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🖥️</div>
+        <h3>브라우저 화면</h3>
+        <p>실행하면 브라우저에 깔끔한 다운로드 화면이 열립니다. 진행률도 실시간으로.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">설치</div>
+    <h2>드래그 한 번이면 끝</h2>
+    <ol class="steps">
+      <li>
+        <b>받은 <span class="kbd">.dmg</span>를 열고 <span class="kbd">줍숑</span> 을 <span class="kbd">Applications</span> 로 드래그</b>
+        <p>창 안의 화살표(Drag)를 따라 오른쪽 Applications 폴더로 옮기면 설치됩니다.</p>
+      </li>
+      <li>
+        <b>첫 실행 시 “확인되지 않은 개발자” 경고 → <span class="kbd">여전히 열기</span></b>
+        <p>시스템 설정 → 개인정보 보호 및 보안 → 아래로 스크롤해 “여전히 열기”. 이후로는 바로 열립니다.</p>
+      </li>
+      <li>
+        <b>실행하면 브라우저에 다운로드 화면이 열립니다</b>
+        <p>유튜브 URL을 붙여넣고 화질을 골라 받으세요. 받은 영상은 다운로드 폴더에 저장됩니다.</p>
+      </li>
+    </ol>
+    <div class="note">Apple 개발자 공증이 없는 무료 배포판이라 첫 실행 경고가 한 번 뜹니다. 위 “여전히 열기”를 한 번만 해주면 됩니다.</div>
+  </section>
+
+  <section>
+    <div class="eyebrow">요구 사항</div>
+    <h2>실행 환경</h2>
+    <div class="req">
+      <div class="item"><div class="k">칩셋</div><div class="v">Apple Silicon (M1 이상)</div></div>
+      <div class="item"><div class="k">macOS</div><div class="v">11 Big Sur 이상</div></div>
+      <div class="item"><div class="k">ffmpeg</div><div class="v">앱에 내장</div></div>
+    </div>
+  </section>
+
+  <footer>
+    줍숑 · 캡슝 패밀리 &nbsp;·&nbsp; <a href="index.html">← 캡슝으로 돌아가기</a>
+  </footer>
+</div>
+</body>
+</html>
