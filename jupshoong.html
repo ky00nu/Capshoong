@@ -25,39 +25,27 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700;800&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap">
 
 <style>
+  /* 줍숑 = 블랙 컨셉 (라이트 전용 다크 테마) */
   :root {
-    --bg: #F7F6F4;
-    --surface: #FFFFFF;
-    --surface-2: #F0EEEB;
-    --ink: #1A1614;
-    --muted: #6B6560;
-    --line: #E6E2DD;
-    --accent: #EB4448;
-    --accent-soft: rgba(235,68,72,0.10);
+    color-scheme: dark;
+    --bg: #0B0B0D;
+    --surface: #16161A;
+    --surface-2: #1E1E23;
+    --ink: #F3F3F5;
+    --muted: #9C9CA4;
+    --line: #2A2A31;
+    --accent: #FF5257;
+    --accent-soft: rgba(255,82,87,0.14);
     --accent-ink: #FFFFFF;
-    --cap-bg: #FFFFFF;
-    --cap-line: #DAD5CF;
-    --cap-shadow: rgba(26,22,20,0.14);
-    --mb-bg: rgba(28,30,34,0.82);
+    --cap-bg: #16161A;
+    --cap-line: #33333B;
+    --cap-shadow: rgba(0,0,0,0.6);
+    --mb-bg: rgba(18,18,22,0.86);
     --mb-ink: #F2F3F5;
-    --mb-menu: rgba(44,46,52,0.96);
+    --mb-menu: rgba(30,30,35,0.96);
     --mb-line: rgba(255,255,255,0.12);
-    --mb-dim: #B4B7BE;
-    --mb-hi: #EB4448;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #14110F; --surface: #1D1917; --surface-2: #251F1C;
-      --ink: #F0EBE6; --muted: #A99F97; --line: #2E2723;
-      --accent: #FF5A56; --accent-soft: rgba(255,90,86,0.15); --accent-ink: #FFFFFF;
-      --cap-bg: #251F1C; --cap-line: #3A322D; --cap-shadow: rgba(0,0,0,0.5);
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #14110F; --surface: #1D1917; --surface-2: #251F1C;
-    --ink: #F0EBE6; --muted: #A99F97; --line: #2E2723;
-    --accent: #FF5A56; --accent-soft: rgba(255,90,86,0.15); --accent-ink: #FFFFFF;
-    --cap-bg: #251F1C; --cap-line: #3A322D; --cap-shadow: rgba(0,0,0,0.5);
+    --mb-dim: #9C9CA4;
+    --mb-hi: #FF5257;
   }
 
   * { box-sizing: border-box; }
@@ -202,6 +190,15 @@
 
   @media (max-width: 560px) { .features, .req { grid-template-columns: 1fr; } }
   @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+
+  /* 블랙 컨셉 보정: 검정 로고를 화이트로 반전, 어두운 마스코트에 글로우 */
+  .brand .word, .hero h1 .h1-word, footer .word { filter: brightness(0) invert(1); }
+  footer .word { opacity: .95; }
+  .hero-left { position: relative; }
+  .hero-left::before { content: ""; position: absolute; inset: -8% -12%; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 47%, rgba(255,82,87,0.22), rgba(255,82,87,0.06) 46%, transparent 72%); }
+  .hero .herocat { position: relative; z-index: 1; }
+  .feature:hover, .req .item { border-color: var(--line); }
 </style>
 </head>
 <body>
