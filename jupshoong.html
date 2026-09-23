@@ -67,13 +67,24 @@
              background: var(--canvas); transition: box-shadow .15s ease; }
   .navlink:hover { box-shadow: var(--shadow); }
 
-  /* Hero — 큰 사진 대신 절제된 타이포 + CTA */
-  .hero { padding-block: 56px 40px; }
+  /* Hero — 캡슝과 동일한 2컬럼(좌 마스코트 / 우 텍스트) */
+  .hero { display: flex; align-items: center; gap: clamp(28px, 6vw, 80px);
+          padding-block: 40px 44px; }
+  .hero-left { flex: 0 0 auto; }
+  .hero-right { flex: 1 1 0; min-width: 0; }
+  .jupcat { width: clamp(200px, 30vw, 360px); height: auto; display: block;
+            filter: drop-shadow(0 22px 26px rgba(20,20,20,0.22)); }
   .hero h1 { font-size: clamp(26px, 4vw, 34px); font-weight: 700; line-height: 1.2;
              letter-spacing: -0.4px; margin: 0; }
   .hero .lead { color: var(--body); font-size: 18px; font-weight: 400;
-                max-width: 33em; margin: 16px 0 0; }
+                max-width: 30em; margin: 16px 0 0; }
   .cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 28px; }
+  @media (max-width: 744px) {
+    .hero { flex-direction: column; text-align: center; gap: 24px; }
+    .jupcat { width: clamp(200px, 56vw, 300px); margin: 0 auto; }
+    .hero .lead { margin-left: auto; margin-right: auto; }
+    .cta-row { justify-content: center; }
+  }
   .btn { display: inline-flex; align-items: center; gap: 8px;
          background: var(--primary); color: var(--on-primary);
          font-size: 16px; font-weight: 500; text-decoration: none;
@@ -148,6 +159,10 @@
   </div>
 
   <div class="hero">
+    <div class="hero-left">
+      <img class="jupcat" src="jup-cat.png" alt="줍숑 마스코트 캐릭터">
+    </div>
+    <div class="hero-right">
     <h1>유튜브를 mp4로, 슈우웅</h1>
     <p class="lead">유튜브 URL만 붙여넣으면 원하는 화질로 바로 다운로드. 캡슝과 같은 감성의 가벼운 맥 앱이에요. 별도 설정 없이, 실행하면 다운로드 화면이 열립니다.</p>
     <div class="cta-row">
@@ -155,6 +170,7 @@
         <span class="arw">↓</span> 줍숑 다운로드 (.dmg)
       </a>
       <span class="meta">v1.0 · Apple Silicon 전용 · <a href="https://github.com/ky00nu/Capshoong/releases/tag/jupshoong-v1.0">릴리스 보기</a></span>
+    </div>
     </div>
   </div>
 
