@@ -76,7 +76,7 @@
   a.chip:hover { color: var(--accent); border-color: var(--accent); }
 
   /* 히어로 (2컬럼: 좌 캐릭터 / 우 텍스트) */
-  .hero { display: flex; align-items: center; gap: clamp(32px, 8vw, 110px);
+  .hero { display: flex; flex-direction: row-reverse; align-items: center; gap: clamp(32px, 8vw, 110px);
           text-align: left; padding-block: 24px 48px;
           min-height: calc(100vh - 72px); min-height: calc(100svh - 72px); }
   .hero-left { flex: 0 0 auto; }
