@@ -3,17 +3,17 @@ set -e
 DIR="$(cd "$(dirname "$0")" && pwd)"
 
 VERSION="1.0"
-APP_BUNDLE="줍숑.app"
-VOLNAME="줍숑 ${VERSION}"
+APP_BUNDLE="겟슝.app"
+VOLNAME="겟슝 ${VERSION}"
 DIST_DIR="${DIR}/dist"
-DMG_OUTPUT="${DIST_DIR}/Jupshoong_${VERSION}.dmg"   # 사이트 링크와 일치
-DMG_DIR="/tmp/jupshoong_dmg_staging"
-RW_DMG="/tmp/jupshoong_rw.dmg"
+DMG_OUTPUT="${DIST_DIR}/Getshoong_${VERSION}.dmg"   # 사이트 링크와 일치
+DMG_DIR="/tmp/getshoong_dmg_staging"
+RW_DMG="/tmp/getshoong_rw.dmg"
 MOUNT="/Volumes/${VOLNAME}"
 SIGN_ID="${SIGN_ID:--}"
 
 if [ ! -d "${DIST_DIR}/${APP_BUNDLE}" ]; then
-  echo "없음: ${DIST_DIR}/${APP_BUNDLE} — 먼저 pyinstaller --noconfirm Jupshoong.spec 실행"
+  echo "없음: ${DIST_DIR}/${APP_BUNDLE} — 먼저 pyinstaller --noconfirm Getshoong.spec 실행"
   exit 1
 fi
 if [ "$SIGN_ID" != "-" ] && ! security find-identity -v -p codesigning 2>/dev/null | grep -q "$SIGN_ID"; then
