@@ -1,0 +1,16 @@
+# Fly.io 배포 설정 (앱 이름은 fly launch 시 지정/변경)
+app = "getshoong-web"
+primary_region = "nrt"   # 도쿄. 원하는 지역으로 변경 가능
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0   # 안 쓸 땐 0대로 내려가 비용 절감
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
