@@ -200,6 +200,32 @@ def trash_paths(paths):
     return trashed, failed
 
 
+def elevated_trash(paths):
+    """관리자 권한으로 휴지통(~/.Trash)에 이동. root 소유 앱 등 권한 거부 항목 처리.
+    암호 프롬프트는 osascript가 한 번만 표시. 완전 삭제가 아니라 이동이라 복구 가능."""
+    import subprocess
+    import shlex
+    trash = os.path.join(HOME, '.Trash')
+    parts = ['/bin/mkdir -p ' + shlex.quote(trash)]
+    for p in paths:
+        if os.path.lexists(p):
+            parts.append('/bin/mv -f ' + shlex.quote(p) + ' ' + shlex.quote(trash + '/'))
+    script = ' && '.join(parts)
+    osa = 'do shell script "%s" with administrator privileges' % (
+        script.replace('\\', '\\\\').replace('"', '\\"'))
+    try:
+        subprocess.run(['osascript', '-e', osa], check=True, capture_output=True)
+    except Exception:
+        pass  # 부분 실패 가능 → 아래에서 경로 존재로 성공/실패 판정
+    trashed, failed = [], []
+    for p in paths:
+        if not os.path.lexists(p):
+            trashed.append(p)
+        else:
+            failed.append({'path': p, 'error': '관리자 권한 삭제 실패(취소 또는 거부)'})
+    return trashed, failed
+
+
 def app_icon_png(app_path, size=64):
     """앱 아이콘을 PNG bytes 로 반환 (실패 시 None)."""
     try:
@@ -258,10 +284,7 @@ def run_server():
         except Exception as e:
             return jsonify({'error': f'스캔 실패: {e}'}), 500
 
-    @app.route('/api/trash', methods=['POST'])
-    def api_trash():
-        data = request.get_json(silent=True) or {}
-        paths = data.get('paths') or []
+    def _safe_paths(paths):
         # 보호 경로 방어: 홈 라이브러리/앱 위치 밖은 거부
         allowed_roots = tuple(os.path.realpath(d) for d in APP_DIRS) + \
             (os.path.realpath(os.path.join(HOME, 'Library')),)
@@ -270,7 +293,21 @@ def run_server():
             rp = os.path.realpath(p)
             if rp.startswith(allowed_roots) and rp not in ('/', HOME):
                 safe.append(p)
+        return safe
+
+    @app.route('/api/trash', methods=['POST'])
+    def api_trash():
+        data = request.get_json(silent=True) or {}
+        safe = _safe_paths(data.get('paths') or [])
         trashed, failed = trash_paths(safe)
+        return jsonify({'trashed': trashed, 'failed': failed,
+                        'needs_auth': len(failed) > 0})
+
+    @app.route('/api/trash-admin', methods=['POST'])
+    def api_trash_admin():
+        data = request.get_json(silent=True) or {}
+        safe = _safe_paths(data.get('paths') or [])
+        trashed, failed = elevated_trash(safe)
         return jsonify({'trashed': trashed, 'failed': failed})
 
     app.run(port=PORT, debug=False, use_reloader=False)

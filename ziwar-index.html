@@ -261,9 +261,20 @@ async function doTrash(){
     const r = await fetch('/api/trash',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({paths})});
     const j = await r.json();
-    const okN=(j.trashed||[]).length, failN=(j.failed||[]).length;
+    let okN=(j.trashed||[]).length, failN=(j.failed||[]).length;
+    if(failN && j.needs_auth){
+      const failedPaths=(j.failed||[]).map(f=>f.path);
+      if(confirm(`${failN}개 항목은 관리자 권한이 필요해요 (예: root 소유로 설치된 앱).\n관리자 암호를 입력해 삭제할까요? (휴지통으로 이동 — 복구 가능)`)){
+        btn.textContent='관리자 권한으로 삭제 중…';
+        try{
+          const r2=await fetch('/api/trash-admin',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({paths:failedPaths})});
+          const j2=await r2.json();
+          okN += (j2.trashed||[]).length; failN=(j2.failed||[]).length;
+        }catch(e2){ /* keep failN */ }
+      }
+    }
     if(failN){
-      toast(`${okN}개 휴지통 이동 · ${failN}개 실패 (권한 확인)`, 4000);
+      toast(`${okN}개 휴지통 이동 · ${failN}개 실패`, 4200);
     }else{
       toast(`✓ ${okN}개 항목(${fmtSize(freed)})을 휴지통으로 옮겼어요`, 3600);
     }
