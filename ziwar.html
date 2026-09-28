@@ -74,6 +74,9 @@
   a.chip { font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; padding: 6px 14px;
            transition: color .12s ease, border-color .12s ease; }
   a.chip:hover { color: var(--accent); border-color: var(--accent); }
+  .nav { display: flex; gap: 8px; }
+  .chip.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); cursor: default; }
+  .chip.active:hover { color: var(--accent-ink); border-color: var(--accent); }
 
   /* 히어로 (2컬럼: 좌 캐릭터 / 우 텍스트) */
   .hero { display: flex; flex-direction: row-reverse; align-items: center; gap: clamp(32px, 8vw, 110px);
@@ -202,10 +205,11 @@
       <img class="appicon" src="ziwar-icon.png" alt="지워 아이콘">
       <img class="word" src="ziwar-logo.png" alt="지워">
     </div>
-    <div style="display:flex;gap:8px;">
-      <a class="chip" href="getshoong.html">겟슝 →</a>
-      <a class="chip" href="index.html">캡슝 →</a>
-    </div>
+        <nav class="nav">
+      <a class="chip" href="index.html">캡슝</a>
+      <a class="chip" href="getshoong.html">겟슝</a>
+      <a class="chip active" href="ziwar.html" aria-current="page">지워</a>
+    </nav>
   </div>
 
   <div class="hero">
