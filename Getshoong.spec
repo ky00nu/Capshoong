@@ -4,7 +4,7 @@
 #   산출물: dist/줍숑.app
 import shutil
 import os
-from PyInstaller.utils.hooks import collect_all
+from PyInstaller.utils.hooks import collect_all, collect_submodules
 
 ffmpeg_path = shutil.which('ffmpeg')
 ffprobe_path = shutil.which('ffprobe')
@@ -22,12 +22,25 @@ except Exception:
     ejs_datas, ejs_binaries, ejs_hiddenimports = [], [], []
 binaries_list += ejs_binaries
 
+# 메뉴바 앱(rumps) + PyObjC 바인딩 포함
+menubar_hidden = ['rumps', 'objc', 'Foundation', 'AppKit']
+for pkg in ('rumps', 'objc', 'Foundation', 'AppKit'):
+    try:
+        menubar_hidden += collect_submodules(pkg)
+    except Exception:
+        pass
+
+# menubar.png 있으면 datas에 포함(없어도 빌드는 진행 → 텍스트 폴백)
+extra_datas = [('index.html', '.')]
+if os.path.exists('menubar.png'):
+    extra_datas.append(('menubar.png', '.'))
+
 a = Analysis(
     ['app.py'],
     pathex=[],
     binaries=binaries_list,
-    datas=[('index.html', '.')] + ejs_datas,
-    hiddenimports=['flask', 'flask_cors', 'yt_dlp', 'yt_dlp.utils', 'yt_dlp.extractor', 'yt_dlp.downloader', 'yt_dlp.postprocessor'] + ejs_hiddenimports,
+    datas=extra_datas + ejs_datas,
+    hiddenimports=['flask', 'flask_cors', 'yt_dlp', 'yt_dlp.utils', 'yt_dlp.extractor', 'yt_dlp.downloader', 'yt_dlp.postprocessor'] + menubar_hidden + ejs_hiddenimports,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -75,7 +88,7 @@ app = BUNDLE(
         'CFBundleVersion': '1.0.0',
         'CFBundleShortVersionString': '1.0.0',
         'NSHighResolutionCapable': True,
-        'LSBackgroundOnly': False,
+        'LSUIElement': True,
         'LSMinimumSystemVersion': '11.0',
     },
 )
