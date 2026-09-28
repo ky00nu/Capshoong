@@ -44,20 +44,34 @@ def app_meta(app_path):
     return {'name': name, 'path': app_path, 'bundle_id': bid, 'version': ver}
 
 
+def _iter_app_bundles(base, max_depth=2):
+    """base 아래에서 .app 번들을 찾음. 하위 폴더는 max_depth까지 내려가되,
+    .app 내부로는 들어가지 않음(Adobe 등 폴더 안에 든 앱, Utilities 폴더 커버)."""
+    found = []
+
+    def walk(d, depth):
+        try:
+            entries = sorted(os.listdir(d), key=str.lower)
+        except OSError:
+            return
+        for e in entries:
+            p = os.path.join(d, e)
+            if e.endswith('.app'):
+                found.append(p)                      # .app 발견 → 내부로는 안 들어감
+            elif depth < max_depth and os.path.isdir(p) and not os.path.islink(p):
+                walk(p, depth + 1)
+
+    walk(base, 0)
+    return found
+
+
 def list_apps():
     seen = set()
     apps = []
     for d in APP_DIRS:
         if not os.path.isdir(d):
             continue
-        try:
-            entries = sorted(os.listdir(d), key=str.lower)
-        except OSError:
-            continue
-        for entry in entries:
-            if not entry.endswith('.app'):
-                continue
-            p = os.path.join(d, entry)
+        for p in _iter_app_bundles(d):
             if p in seen:
                 continue
             seen.add(p)
@@ -68,6 +82,7 @@ def list_apps():
             if m['name'] in PROTECTED_NAMES:
                 continue
             apps.append(m)
+    apps.sort(key=lambda a: a['name'].lower())
     return apps
 
 
