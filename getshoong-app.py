@@ -234,7 +234,7 @@ class GetshoongApp(rumps.App):
         kwargs = {'quit_button': None}
         if os.path.isfile(icon_path):
             kwargs['icon'] = icon_path
-            kwargs['template'] = True   # 다크/라이트 메뉴바 자동 대응
+            kwargs['template'] = False  # 겟슝 캐릭터 컬러 아이콘(단색 실루엣 방지)
             kwargs['title'] = None
         super().__init__("겟슝", **kwargs)
         self.menu = [
