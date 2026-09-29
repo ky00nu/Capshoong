@@ -5,19 +5,24 @@
 # 빌드 폴더에는 app.py / index.html / icon.png / AppIcon.icns 가 있어야 합니다.
 from PyInstaller.utils.hooks import collect_submodules
 
-hidden = ['flask', 'objc', 'Foundation', 'AppKit', 'CoreFoundation']
-# PyObjC 프레임워크 바인딩을 넉넉히 포함 (누락 시 런타임 ImportError 방지)
-for pkg in ('objc', 'Foundation', 'AppKit'):
+import os as _os
+hidden = ['flask', 'rumps', 'objc', 'Foundation', 'AppKit', 'CoreFoundation']
+# PyObjC 프레임워크 바인딩 + rumps를 넉넉히 포함 (누락 시 런타임 ImportError 방지)
+for pkg in ('rumps', 'objc', 'Foundation', 'AppKit'):
     try:
         hidden += collect_submodules(pkg)
     except Exception:
         pass
 
+_datas = [('index.html', '.'), ('icon.png', '.')]
+if _os.path.exists('menubar.png'):
+    _datas.append(('menubar.png', '.'))
+
 a = Analysis(
     ['app.py'],
     pathex=[],
     binaries=[],
-    datas=[('index.html', '.'), ('icon.png', '.')],
+    datas=_datas,
     hiddenimports=hidden,
     hookspath=[],
     hooksconfig={},
@@ -66,7 +71,7 @@ app = BUNDLE(
         'CFBundleVersion': '1.0.0',
         'CFBundleShortVersionString': '1.0.0',
         'NSHighResolutionCapable': True,
-        'LSBackgroundOnly': False,
+        'LSUIElement': True,
         'LSMinimumSystemVersion': '11.0',
     },
 )

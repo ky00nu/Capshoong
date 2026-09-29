@@ -1,9 +1,8 @@
 import os
 import sys
 import glob
-import signal
 import threading
-import webbrowser
+import subprocess
 
 
 def resource_path(relative):
@@ -313,25 +312,50 @@ def run_server():
     app.run(port=PORT, debug=False, use_reloader=False)
 
 
-def main():
-    signal.signal(signal.SIGINT, lambda *_: os._exit(0))
-    signal.signal(signal.SIGTERM, lambda *_: os._exit(0))
-
-    t = threading.Thread(target=run_server, daemon=True)
-    t.start()
-
+def _open_browser_when_ready():
+    """서버 포트가 열리면 기본 브라우저로 지워 화면을 연다(번들에서 확실히 동작)."""
+    import socket
     import time
-    time.sleep(1.5)
-    webbrowser.open(f'http://localhost:{PORT}')
+    url = f'http://localhost:{PORT}'
+    for _ in range(60):  # 최대 ~12초 대기
+        try:
+            with socket.create_connection(('127.0.0.1', PORT), 0.3):
+                break
+        except OSError:
+            time.sleep(0.2)
+    subprocess.Popen(['open', url])
 
-    print('지워가 실행 중입니다.')
-    print(f'브라우저에서 http://localhost:{PORT} 에 접속하세요.')
-    print('종료하려면 이 앱을 닫으세요.')
 
-    try:
-        t.join()
-    except KeyboardInterrupt:
-        os._exit(0)
+import rumps
+
+
+class ZiwarApp(rumps.App):
+    def __init__(self):
+        icon_path = resource_path('menubar.png')
+        kwargs = {'quit_button': None}
+        if os.path.isfile(icon_path):
+            kwargs['icon'] = icon_path
+            kwargs['template'] = True   # 다크/라이트 메뉴바 자동 대응
+            kwargs['title'] = None
+        super().__init__("지워", **kwargs)
+        self.menu = [
+            rumps.MenuItem("지워 화면 열기", callback=self._open_ui),
+            None,
+            rumps.MenuItem("종료", callback=self._quit),
+        ]
+
+    def _open_ui(self, _):
+        subprocess.Popen(['open', f'http://localhost:{PORT}'])
+
+    def _quit(self, _):
+        rumps.quit_application()
+
+
+def main():
+    # Flask 서버는 백그라운드 스레드에서, 메뉴바 앱은 메인 스레드에서 실행
+    threading.Thread(target=run_server, daemon=True).start()
+    threading.Thread(target=_open_browser_when_ready, daemon=True).start()
+    ZiwarApp().run()
 
 
 if __name__ == '__main__':
