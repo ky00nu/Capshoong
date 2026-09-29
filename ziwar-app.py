@@ -18,9 +18,16 @@ PORT = 7788
 # 스캔할 앱 위치 (시스템 기본 앱이 있는 /System/Applications 은 제외)
 APP_DIRS = ['/Applications', os.path.join(HOME, 'Applications')]
 
-# 절대 삭제 대상에서 제외 (자기 자신 + 필수 도구)
-PROTECTED_BUNDLE_PREFIXES = ('com.apple.',)
-PROTECTED_NAMES = {'지워', 'Ziwar', 'Finder', 'Safari'}
+# 삭제 목록에서 제외할 보호 앱.
+# /System/Applications 은 애초에 스캔하지 않으므로, /Applications 에 설치된
+# '삭제 가능한' 애플 앱(GarageBand·Keynote·iMovie·Numbers·Pages·Xcode 등)은 표시한다.
+# 단, 지우면 안 되는 핵심 앱만 번들ID/이름으로 콕 집어 보호.
+PROTECTED_BUNDLE_IDS = {
+    'com.apple.safari', 'com.apple.finder', 'com.apple.systempreferences',
+    'com.apple.systemsettings', 'com.apple.appstore',
+}
+PROTECTED_NAMES = {'지워', 'Ziwar', 'Finder', 'Safari', 'App Store',
+                   '시스템 설정', 'System Settings'}
 
 
 def _plist_get(app_path, key):
@@ -76,7 +83,7 @@ def list_apps():
             seen.add(p)
             m = app_meta(p)
             bid = (m['bundle_id'] or '').lower()
-            if bid.startswith(PROTECTED_BUNDLE_PREFIXES):
+            if bid in PROTECTED_BUNDLE_IDS:
                 continue
             if m['name'] in PROTECTED_NAMES:
                 continue
@@ -326,32 +333,31 @@ def _open_browser_when_ready():
     subprocess.Popen(['open', url])
 
 
-import rumps
-
-
-class ZiwarApp(rumps.App):
-    def __init__(self):
-        icon_path = resource_path('menubar.png')
-        kwargs = {'quit_button': None}
-        if os.path.isfile(icon_path):
-            kwargs['icon'] = icon_path
-            kwargs['template'] = True   # 다크/라이트 메뉴바 자동 대응
-            kwargs['title'] = None
-        super().__init__("지워", **kwargs)
-        self.menu = [
-            rumps.MenuItem("지워 화면 열기", callback=self._open_ui),
-            None,
-            rumps.MenuItem("종료", callback=self._quit),
-        ]
-
-    def _open_ui(self, _):
-        subprocess.Popen(['open', f'http://localhost:{PORT}'])
-
-    def _quit(self, _):
-        rumps.quit_application()
-
-
 def main():
+    # rumps는 실행 시에만 필요(모듈 임포트/서버 로직 재사용 시 의존성 배제)
+    import rumps
+
+    class ZiwarApp(rumps.App):
+        def __init__(self):
+            icon_path = resource_path('menubar.png')
+            kwargs = {'quit_button': None}
+            if os.path.isfile(icon_path):
+                kwargs['icon'] = icon_path
+                kwargs['template'] = True   # 다크/라이트 메뉴바 자동 대응
+                kwargs['title'] = None
+            super().__init__("지워", **kwargs)
+            self.menu = [
+                rumps.MenuItem("지워 화면 열기", callback=self._open_ui),
+                None,
+                rumps.MenuItem("종료", callback=self._quit),
+            ]
+
+        def _open_ui(self, _):
+            subprocess.Popen(['open', f'http://localhost:{PORT}'])
+
+        def _quit(self, _):
+            rumps.quit_application()
+
     # Flask 서버는 백그라운드 스레드에서, 메뉴바 앱은 메인 스레드에서 실행
     threading.Thread(target=run_server, daemon=True).start()
     threading.Thread(target=_open_browser_when_ready, daemon=True).start()
